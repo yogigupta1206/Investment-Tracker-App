@@ -78,4 +78,7 @@ dependencies {
     // DI
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+
+    //GSON
+    implementation(libs.code.gson)
 }

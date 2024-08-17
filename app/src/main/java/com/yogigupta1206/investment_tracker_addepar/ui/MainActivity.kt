@@ -1,4 +1,4 @@
-package com.yogigupta1206.investment_tracker_addepar
+package com.yogigupta1206.investment_tracker_addepar.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,7 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.yogigupta1206.investment_tracker_addepar.ui.theme.InvestmentTrackerAddeparTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

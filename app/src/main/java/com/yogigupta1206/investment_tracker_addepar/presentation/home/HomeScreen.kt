@@ -32,6 +32,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.yogigupta1206.investment_tracker_addepar.domain.model.Investment
 import com.yogigupta1206.investment_tracker_addepar.presentation.home.components.InvestmentItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +53,8 @@ fun HomeScreen(
                 padding,
                 uiState,
                 onNavigateToInvestmentDetail,
-                viewModel::fetchData
+                viewModel::fetchData,
+                viewModel::updateSelectedInvestment
             )
         }
     )
@@ -62,7 +65,8 @@ fun HomeScreenContent(
     padding: PaddingValues,
     uiState: HomeScreenUiState,
     onNavigateToInvestmentDetails: ()-> Unit,
-    onRetry: () -> Unit
+    onRetry: () -> Unit,
+    onInvestmentSelection: (Investment) -> Unit,
 ) {
     Column(
         modifier = Modifier.padding(padding)
@@ -83,6 +87,7 @@ fun HomeScreenContent(
                 ) {
                     items(uiState.investmentList){
                         InvestmentItem(it, onClick = {
+                            onInvestmentSelection(it)
                             onNavigateToInvestmentDetails()
                         })
                     }

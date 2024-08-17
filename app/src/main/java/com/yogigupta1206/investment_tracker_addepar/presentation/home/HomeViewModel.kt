@@ -1,8 +1,12 @@
 package com.yogigupta1206.investment_tracker_addepar.presentation.home
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yogigupta1206.investment_tracker_addepar.domain.model.Investment
 import com.yogigupta1206.investment_tracker_addepar.domain.repository.InvestmentRepo
+import com.yogigupta1206.investment_tracker_addepar.presentation.investment_detail.InvestmentInfoUiState
 import com.yogigupta1206.investment_tracker_addepar.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -12,6 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+//SHARED VIEW MODEL
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val repository: InvestmentRepo
@@ -19,6 +24,9 @@ class HomeViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(HomeScreenUiState())
     val uiState: StateFlow<HomeScreenUiState> = _uiState.asStateFlow()
+
+    private val _investmentDetailUiState: MutableLiveData<InvestmentInfoUiState> = MutableLiveData(InvestmentInfoUiState())
+    val investmentDetailUiState: LiveData<InvestmentInfoUiState> = _investmentDetailUiState
 
     private var job: Job? = null
 
@@ -52,6 +60,10 @@ class HomeViewModel @Inject constructor(
                     }
                 }
         }
+    }
+
+    fun updateSelectedInvestment(investment: Investment){
+        _investmentDetailUiState.value = InvestmentInfoUiState(investment = investment)
     }
 
 }

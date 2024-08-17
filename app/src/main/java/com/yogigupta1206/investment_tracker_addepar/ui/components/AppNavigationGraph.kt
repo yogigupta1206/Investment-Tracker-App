@@ -1,12 +1,17 @@
 package com.yogigupta1206.investment_tracker_addepar.ui.components
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.yogigupta1206.investment_tracker_addepar.presentation.home.HomeScreen
+import com.yogigupta1206.investment_tracker_addepar.presentation.home.HomeViewModel
+import com.yogigupta1206.investment_tracker_addepar.presentation.investment_detail.InvestmentDetailsContent
+import com.yogigupta1206.investment_tracker_addepar.presentation.investment_detail.InvestmentDetailsScreen
 
 @Composable
 fun AppNavigationGraph() {
@@ -23,7 +28,11 @@ fun AppNavigationGraph() {
         }
 
         composable(Screens.InvestmentDetailsPage.route) {
-            //InvestmentDeatilsPage(onNavigateBack = { navController.popBackStack() })
+            val backStackEntry = remember(navController) {
+                navController.getBackStackEntry(Screens.HomePage.route)
+            }
+            val viewModel: HomeViewModel = hiltViewModel(backStackEntry)
+            InvestmentDetailsScreen(viewModel, onNavigateBack = { navController.popBackStack() })
         }
 
 

@@ -4,4 +4,6 @@
     <string name="back">Back</string>
     <string name="_0">0</string>
     <string name="empty_string" />
+    <string name="investments">Investments</string>
+    <string name="retry">Retry</string>
 </resources>

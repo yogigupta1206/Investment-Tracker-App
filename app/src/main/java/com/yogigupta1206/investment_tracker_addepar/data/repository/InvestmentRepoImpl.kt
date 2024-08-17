@@ -27,17 +27,22 @@ class InvestmentRepoImpl@Inject constructor(
 
     override fun getInvestments(): Flow<Response<List<Investment>>> = flow {
         emit(Response.Loading())
-        val jsonString = AssetJsonReader.readJSONFromAssets(context, "path")
         try {
-            val gson = Gson()
-            val response = gson.fromJson(jsonString, InvestmentsSuccessResponse::class.java)
-            if (response.investments != null) {
-                emit(Response.Success(response.investments))
-            } else {
-                val errorResponse = gson.fromJson(jsonString, InvestmentErrorResponse::class.java)
-                Log.e(TAG, "${errorResponse.error ?: "Unknown Error"} : ${errorResponse.errorDescription}")
-                emit(Response.Error(errorResponse.error ?: "Unknown Error"))
-            }
+            val jsonString = AssetJsonReader.readJSONFromAssets(context, "investments.json")
+            val investmentList = parseInvestments(jsonString)
+            emit(Response.Success(investmentList))
+        }
+        catch (e: NullInvestmentException){
+            Log.e(TAG, "NullInvestmentException: ${e.message}",e)
+            emit(Response.Error(e.message ?: "Unknown Error"))
+        }
+        catch (e: EmptyInvestmentException){
+            Log.e(TAG, "EmptyInvestmentException: ${e.message}",e)
+            emit(Response.Error(e.message ?: "Unknown Error"))
+        }
+        catch (e: MalformedDataException){
+            Log.e(TAG, "MalformedDataException: ${e.message}",e)
+            emit(Response.Error(e.message ?: "Unknown Error"))
         }
         catch (e: JsonSyntaxException){
             Log.e(TAG, "JsonSyntaxException: ${e.message}",e)
@@ -48,5 +53,32 @@ class InvestmentRepoImpl@Inject constructor(
             emit(Response.Error("Exception occurred"))
         }
         }.flowOn(Dispatchers.IO)
+
+
+    private fun parseInvestments(jsonString: String): List<Investment>{
+        val gson = Gson()
+        val response = gson.fromJson(jsonString, InvestmentsSuccessResponse::class.java)
+        val investments = response.investments
+
+        when {
+            investments == null -> {
+                val errorResponse = gson.fromJson(jsonString, InvestmentErrorResponse::class.java)
+                Log.e(TAG, "${errorResponse.error ?: "Unknown Error"} : ${errorResponse.errorDescription}")
+                throw NullInvestmentException(errorResponse.errorDescription ?: "Unknown Error")
+            }
+            investments.isEmpty() -> {
+                Log.e(TAG, "No Investment Found")
+                throw EmptyInvestmentException("No Investment Found")
+            }
+            investments.any { it.name == null } -> {
+                Log.e(TAG, "Malformed JSON Response Received")
+                throw MalformedDataException("Malformed JSON Response Received")
+            }
+            else -> {
+                Log.d(TAG, "investmentList: $investments")
+                return investments
+            }
+        }
+    }
 
 }

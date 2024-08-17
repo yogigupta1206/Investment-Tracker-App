@@ -24,7 +24,7 @@ fun InvestmentItem(investment: Investment, onClick: () -> Unit) {
             .clickable { onClick() }
     ) {
         Column{
-            Text(text = investment.name,
+            Text(text = investment.name?: "",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
                 textAlign = TextAlign.Start,

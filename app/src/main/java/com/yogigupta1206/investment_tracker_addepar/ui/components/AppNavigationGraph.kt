@@ -6,6 +6,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.yogigupta1206.investment_tracker_addepar.presentation.home.HomeScreen
 
 @Composable
 fun AppNavigationGraph() {
@@ -18,7 +19,7 @@ fun AppNavigationGraph() {
     ) {
 
         composable(Screens.HomePage.route) {
-            //HomeScreen(onNavigateToMovieDetails = { navController.onNavigateToInvestmentDetails() })
+            HomeScreen(onNavigateToInvestmentDetail = { navController.onNavigateToInvestmentDetails() })
         }
 
         composable(Screens.InvestmentDetailsPage.route) {

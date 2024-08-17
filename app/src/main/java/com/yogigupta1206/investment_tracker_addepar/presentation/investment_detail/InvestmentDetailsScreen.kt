@@ -19,17 +19,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.yogigupta1206.investment_tracker_addepar.R
 import com.yogigupta1206.investment_tracker_addepar.domain.model.Investment
-import com.yogigupta1206.investment_tracker_addepar.presentation.home.HomeViewModel
+import com.yogigupta1206.investment_tracker_addepar.presentation.SharedInvestmentViewModel
 
 @Composable
 fun InvestmentDetailsScreen(
-    viewModel: HomeViewModel = hiltViewModel(),
+    viewModel: SharedInvestmentViewModel = hiltViewModel(),
     onNavigateBack:() -> Unit
 ) {
 
@@ -55,10 +57,10 @@ fun InvestmentDetailsContent(investment: Investment, onNavigateBack: () -> Unit)
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Investment Details") },
+                title = { Text(stringResource(R.string.investment_details)) },
                 navigationIcon = {
                     IconButton(onClick = { onNavigateBack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
                     }
                 }
             )
@@ -71,35 +73,35 @@ fun InvestmentDetailsContent(investment: Investment, onNavigateBack: () -> Unit)
                 .fillMaxSize()
         ) {
 
-            Text(text = investment.name ?: "",
+            Text(text = investment.name ?: stringResource(R.string.empty_string),
                 lineHeight = 32.sp,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Medium,
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(24.dp))
-            Text(text = investment.ticker ?: "",
+            Text(text = investment.ticker ?: stringResource(R.string.empty_string),
                 lineHeight = 24.sp,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Start
             )
             Spacer(modifier = Modifier.height(24.dp))
-            Text(text = investment.principal ?: "0",
+            Text(text = investment.principal ?: stringResource(R.string._0),
                 lineHeight = 24.sp,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Start
             )
             Spacer(modifier = Modifier.height(24.dp))
-            Text(text = investment.value ?: "0",
+            Text(text = investment.value ?: stringResource(R.string._0),
                 lineHeight = 24.sp,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Start
             )
             Spacer(modifier = Modifier.height(24.dp))
-            Text(text = investment.details ?: "",
+            Text(text = investment.details ?: stringResource(R.string.empty_string),
                 lineHeight = 24.sp,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal,

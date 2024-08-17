@@ -9,8 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.yogigupta1206.investment_tracker_addepar.presentation.home.HomeScreen
-import com.yogigupta1206.investment_tracker_addepar.presentation.home.HomeViewModel
-import com.yogigupta1206.investment_tracker_addepar.presentation.investment_detail.InvestmentDetailsContent
+import com.yogigupta1206.investment_tracker_addepar.presentation.SharedInvestmentViewModel
 import com.yogigupta1206.investment_tracker_addepar.presentation.investment_detail.InvestmentDetailsScreen
 
 @Composable
@@ -31,7 +30,7 @@ fun AppNavigationGraph() {
             val backStackEntry = remember(navController) {
                 navController.getBackStackEntry(Screens.HomePage.route)
             }
-            val viewModel: HomeViewModel = hiltViewModel(backStackEntry)
+            val viewModel: SharedInvestmentViewModel = hiltViewModel(backStackEntry)
             InvestmentDetailsScreen(viewModel, onNavigateBack = { navController.popBackStack() })
         }
 

@@ -1,4 +1,4 @@
-package com.yogigupta1206.investment_tracker_addepar.presentation.home
+package com.yogigupta1206.investment_tracker_addepar.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yogigupta1206.investment_tracker_addepar.domain.model.Investment
 import com.yogigupta1206.investment_tracker_addepar.domain.repository.InvestmentRepo
+import com.yogigupta1206.investment_tracker_addepar.presentation.home.HomeScreenUiState
 import com.yogigupta1206.investment_tracker_addepar.presentation.investment_detail.InvestmentInfoUiState
 import com.yogigupta1206.investment_tracker_addepar.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,7 @@ import javax.inject.Inject
 
 //SHARED VIEW MODEL
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class SharedInvestmentViewModel @Inject constructor(
     private val repository: InvestmentRepo
 ) : ViewModel() {
 

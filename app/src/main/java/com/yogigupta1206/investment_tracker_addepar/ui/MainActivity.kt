@@ -11,8 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.yogigupta1206.investment_tracker_addepar.ui.components.AppNavigationGraph
 import com.yogigupta1206.investment_tracker_addepar.ui.theme.InvestmentTrackerAddeparTheme
+import com.yogigupta1206.investment_tracker_addepar.ui.components.AppNavigationGraph
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

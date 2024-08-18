@@ -11,12 +11,17 @@ This document describes the investment portfolio tracking app developed for the 
 ## Features
 
 - Lists all investments retrieved from the JSON files.
-- Provides a detailed view for each investment when selected from the list.
+- Provides a detailed view of each investment when selected from the list.
 - Supports handling different JSON scenarios:
   - Valid investments (investments.json)
   - Empty investment list (investments-empty.json)
   - Malformed JSON data (investments-malformed.json)
   - Error response (investments-error.json)
+
+
+### Screenshots
+
+<img src="screenshots/investmentListLight.png" width="220" height="500"> <img src="screenshots/investmentListDark.png" width="220" height="500"> <img src="screenshots/investmentDetailPositiveDark.png" width="220" height="500"> <img src="screenshots/investmentDetailPositiveLight.png" width="220" height="500"> <img src="screenshots/investmentDetailNegativeDark.png" width="220" height="500"> <img src="screenshots/investmentDetailNegativeLight.png" width="220" height="500">
 
 
 ## Development Environment

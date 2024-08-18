@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
+import kotlin.jvm.Throws
 
 class InvestmentRepoImpl@Inject constructor(
     @ApplicationContext private val context: Context
@@ -55,6 +56,7 @@ class InvestmentRepoImpl@Inject constructor(
         }.flowOn(Dispatchers.IO)
 
 
+    @Throws(EmptyInvestmentException::class, NullInvestmentException::class, MalformedDataException::class, JsonSyntaxException::class)
     private fun parseInvestments(jsonString: String): List<Investment>{
         val gson = Gson()
         val response = gson.fromJson(jsonString, InvestmentsSuccessResponse::class.java)
@@ -70,7 +72,7 @@ class InvestmentRepoImpl@Inject constructor(
                 Log.e(TAG, "No Investment Found")
                 throw EmptyInvestmentException("No Investment Found")
             }
-            investments.any { it.name == null } -> {
+            investments.any { it.name == null || it.value == null || it.details == null || it.principal == null } -> {
                 Log.e(TAG, "Malformed JSON Response Received")
                 throw MalformedDataException("Malformed JSON Response Received")
             }

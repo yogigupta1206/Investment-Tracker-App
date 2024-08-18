@@ -6,4 +6,5 @@
     <string name="empty_string" />
     <string name="investments">Investments</string>
     <string name="retry">Retry</string>
+    <string name="unknown_error">Unknown Error</string>
 </resources>

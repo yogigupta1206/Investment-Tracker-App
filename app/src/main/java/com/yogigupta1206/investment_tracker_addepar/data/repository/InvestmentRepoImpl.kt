@@ -4,10 +4,12 @@ import android.content.Context
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
+import com.yogigupta1206.investment_tracker_addepar.R
 import com.yogigupta1206.investment_tracker_addepar.domain.model.Investment
 import com.yogigupta1206.investment_tracker_addepar.domain.model.InvestmentErrorResponse
 import com.yogigupta1206.investment_tracker_addepar.domain.model.InvestmentsSuccessResponse
 import com.yogigupta1206.investment_tracker_addepar.domain.repository.InvestmentRepo
+import com.yogigupta1206.investment_tracker_addepar.utils.ASSET_PATH
 import com.yogigupta1206.investment_tracker_addepar.utils.AssetJsonReader
 import com.yogigupta1206.investment_tracker_addepar.utils.Response
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -29,21 +31,21 @@ class InvestmentRepoImpl@Inject constructor(
     override fun getInvestments(): Flow<Response<List<Investment>>> = flow {
         emit(Response.Loading())
         try {
-            val jsonString = AssetJsonReader.readJSONFromAssets(context, "investments.json")
+            val jsonString = AssetJsonReader.readJSONFromAssets(context, ASSET_PATH)
             val investmentList = parseInvestments(jsonString)
             emit(Response.Success(investmentList))
         }
         catch (e: NullInvestmentException){
             Log.e(TAG, "NullInvestmentException: ${e.message}",e)
-            emit(Response.Error(e.message ?: "Unknown Error"))
+            emit(Response.Error(e.message ?: context.getString(R.string.unknown_error)))
         }
         catch (e: EmptyInvestmentException){
             Log.e(TAG, "EmptyInvestmentException: ${e.message}",e)
-            emit(Response.Error(e.message ?: "Unknown Error"))
+            emit(Response.Error(e.message ?: context.getString(R.string.unknown_error)))
         }
         catch (e: MalformedDataException){
             Log.e(TAG, "MalformedDataException: ${e.message}",e)
-            emit(Response.Error(e.message ?: "Unknown Error"))
+            emit(Response.Error(e.message ?: context.getString(R.string.unknown_error)))
         }
         catch (e: JsonSyntaxException){
             Log.e(TAG, "JsonSyntaxException: ${e.message}",e)
@@ -65,16 +67,16 @@ class InvestmentRepoImpl@Inject constructor(
         when {
             investments == null -> {
                 val errorResponse = gson.fromJson(jsonString, InvestmentErrorResponse::class.java)
-                Log.e(TAG, "${errorResponse.error ?: "Unknown Error"} : ${errorResponse.errorDescription}")
-                throw NullInvestmentException(errorResponse.errorDescription ?: "Unknown Error")
+                Log.e(TAG, "${errorResponse.error ?: context.getString(R.string.unknown_error)} : ${errorResponse.errorDescription}")
+                throw NullInvestmentException(errorResponse.errorDescription ?: context.getString(R.string.unknown_error))
             }
             investments.isEmpty() -> {
                 Log.e(TAG, "No Investment Found")
-                throw EmptyInvestmentException("No Investment Found")
+                throw EmptyInvestmentException()
             }
             investments.any { it.name == null || it.value == null || it.details == null || it.principal == null } -> {
                 Log.e(TAG, "Malformed JSON Response Received")
-                throw MalformedDataException("Malformed JSON Response Received")
+                throw MalformedDataException()
             }
             else -> {
                 Log.d(TAG, "investmentList: $investments")

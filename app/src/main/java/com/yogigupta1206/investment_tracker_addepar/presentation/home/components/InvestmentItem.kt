@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yogigupta1206.investment_tracker_addepar.R
 import com.yogigupta1206.investment_tracker_addepar.domain.model.Investment
-import com.yogigupta1206.investment_tracker_addepar.presentation.components.InvestmentCalculations
+import com.yogigupta1206.investment_tracker_addepar.presentation.common_components.InvestmentCalculations
 import com.yogigupta1206.investment_tracker_addepar.ui.theme.LocalExtendedColors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

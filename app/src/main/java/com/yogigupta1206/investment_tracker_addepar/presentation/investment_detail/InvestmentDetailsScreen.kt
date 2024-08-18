@@ -4,9 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -21,7 +19,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -29,16 +26,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.yogigupta1206.investment_tracker_addepar.R
 import com.yogigupta1206.investment_tracker_addepar.domain.model.Investment
 import com.yogigupta1206.investment_tracker_addepar.presentation.SharedInvestmentViewModel
+import com.yogigupta1206.investment_tracker_addepar.presentation.components.InvestmentCalculations
+import com.yogigupta1206.investment_tracker_addepar.ui.theme.LocalExtendedColors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlin.math.absoluteValue
 
 @Composable
 fun InvestmentDetailsScreen(
@@ -65,10 +62,10 @@ fun InvestmentDetailsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InvestmentDetailsContent(investment: Investment, onNavigateBack: () -> Unit) {
-    var currentValue by remember { mutableDoubleStateOf(0.0) }
-    var principalValue by remember { mutableDoubleStateOf(0.0) }
-    var profitLoss by remember { mutableDoubleStateOf(0.0) }
-    var profitLossPercentage by remember { mutableDoubleStateOf(0.0) }
+
+    var calculatedData by remember(investment) {
+        mutableStateOf(InvestmentCalculations(0.0, 0.0, 0.0, 0.0))
+    }
 
     Scaffold(
         topBar = {
@@ -101,26 +98,22 @@ fun InvestmentDetailsContent(investment: Investment, onNavigateBack: () -> Unit)
             }
 
             LaunchedEffect(investment) {
-                val currentValueCalculated = withContext(Dispatchers.Default) {
-                    investment.value?.toDoubleOrNull() ?: 0.0
+                val calculatedValues = withContext(Dispatchers.Default) {
+                    val currentValue = investment.value?.toDoubleOrNull() ?: 0.0
+                    val principalValue = investment.principal?.toDoubleOrNull() ?: 0.0
+                    val profitLoss = currentValue - principalValue
+                    val profitLossPercentage = (profitLoss / principalValue) * 100
+                    InvestmentCalculations(currentValue, principalValue, profitLoss, profitLossPercentage)
                 }
-                val principalValueCalculated = withContext(Dispatchers.Default) {
-                    investment.principal?.toDoubleOrNull() ?: 0.0
-                }
-                val profitLossCalculated = currentValueCalculated - principalValueCalculated
-                val profitLossPercentageCalculated = (profitLossCalculated / principalValueCalculated) * 100
-                currentValue = currentValueCalculated
-                principalValue = principalValueCalculated
-                profitLoss = profitLossCalculated
-                profitLossPercentage = profitLossPercentageCalculated
+                calculatedData = calculatedValues
             }
 
             Text(
-                text = "Current Value: $${"%.2f".format(currentValue)}",    // Can't be Two Source of Truth
+                text = "Current Value: $${"%.2f".format(calculatedData.currentValue)}",    // Can't be Two Source of Truth
                 style = MaterialTheme.typography.bodyLarge
             )
             Text(
-                text = "Principal: $${"%.2f".format(principalValue)}",      // Can't be Two Source of Truth
+                text = "Principal: $${"%.2f".format(calculatedData.principalValue)}",      // Can't be Two Source of Truth
                 style = MaterialTheme.typography.bodyLarge
             )
             Row {
@@ -129,13 +122,13 @@ fun InvestmentDetailsContent(investment: Investment, onNavigateBack: () -> Unit)
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    text = "${if (profitLoss >= 0) "+" else ""}$${"%.2f".format(profitLoss)}",
-                    color = if (profitLoss >= 0) Color.Green else Color.Red,
+                    text = "${if (calculatedData.profitLoss >= 0) "+" else "-"}$${"%.2f".format(calculatedData.profitLoss.absoluteValue)}",
+                    color = if (calculatedData.profitLoss >= 0) LocalExtendedColors.current.success.color else MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    text = " ( ${"%.2f".format(profitLossPercentage)}% )",
-                    color = if (profitLoss >= 0) Color.Green else Color.Red,
+                    text = " ( ${"%.2f".format(calculatedData.profitLossPercentage)}% )",
+                    color = if (calculatedData.profitLoss >= 0) LocalExtendedColors.current.success.color else MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodyLarge
                 )
             }

@@ -19,6 +19,19 @@ This document describes the investment portfolio tracking app developed for the 
   - Error response (investments-error.json)
 
 
+ 
+### Testing Error Cases
+
+The provided JSON files can be used to test different error scenarios during app execution:
+
+- `investments.json`: Valid JSON data with investments (expected success).
+- `investments-empty.json`: JSON data with an empty investment list (tests empty investments handling).
+- `investments-error.json`: JSON data containing an error response (tests null investments handling).
+- `investments-malformed.json`: Invalid JSON data (tests malformed data handling).
+
+Alternatively, you can modify the `investments.json` content to introduce syntax errors and test JSON parsing exceptions.
+
+
 ### Screenshots
 
 #### Light Theme

@@ -21,7 +21,12 @@ This document describes the investment portfolio tracking app developed for the 
 
 ### Screenshots
 
-<img src="screenshots/investmentListLight.png" width="220" height="500"> <img src="screenshots/investmentListDark.png" width="220" height="500"> <img src="screenshots/investmentDetailPositiveDark.png" width="220" height="500"> <img src="screenshots/investmentDetailPositiveLight.png" width="220" height="500"> <img src="screenshots/investmentDetailNegativeDark.png" width="220" height="500"> <img src="screenshots/investmentDetailNegativeLight.png" width="220" height="500">
+#### Light Theme
+<img src="screenshots/investmentListLight.png" width="220" height="500"> <img src="screenshots/investmentDetailPositiveLight.png" width="220" height="500"> <img src="screenshots/investmentDetailNegativeLight.png" width="220" height="500"> <img src="screenshots/investmentErrorLight.png" width="220" height="500"> <img src="screenshots/investmentMalformedLight.png" width="220" height="500"> <img src="screenshots/investmentEmptyLight.png" width="220" height="500">
+
+#### Dark Theme
+
+<img src="screenshots/investmentListDark.png" width="220" height="500"> <img src="screenshots/investmentDetailPositiveDark.png" width="220" height="500"> <img src="screenshots/investmentDetailNegativeDark.png" width="220" height="500"> <img src="screenshots/investmentErrorDark.png" width="220" height="500"> <img src="screenshots/investmentMalformedDark.png" width="220" height="500"> <img src="screenshots/investmentEmptyDark.png" width="220" height="500">
 
 
 ## Development Environment

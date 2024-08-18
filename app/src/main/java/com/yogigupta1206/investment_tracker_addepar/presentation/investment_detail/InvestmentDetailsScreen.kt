@@ -1,7 +1,9 @@
 package com.yogigupta1206.investment_tracker_addepar.presentation.investment_detail
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -12,10 +14,17 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +37,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.yogigupta1206.investment_tracker_addepar.R
 import com.yogigupta1206.investment_tracker_addepar.domain.model.Investment
 import com.yogigupta1206.investment_tracker_addepar.presentation.SharedInvestmentViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Composable
 fun InvestmentDetailsScreen(
@@ -54,6 +65,11 @@ fun InvestmentDetailsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InvestmentDetailsContent(investment: Investment, onNavigateBack: () -> Unit) {
+    var currentValue by remember { mutableDoubleStateOf(0.0) }
+    var principalValue by remember { mutableDoubleStateOf(0.0) }
+    var profitLoss by remember { mutableDoubleStateOf(0.0) }
+    var profitLossPercentage by remember { mutableDoubleStateOf(0.0) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -69,43 +85,67 @@ fun InvestmentDetailsContent(investment: Investment, onNavigateBack: () -> Unit)
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(top = 24.dp, start = 16.dp, end = 16.dp)
-                .fillMaxSize()
+                .padding(16.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            Text(
+                text = investment.name ?: stringResource(id = R.string.empty_string),
+                style = MaterialTheme.typography.titleMedium
+            )
+            if (!investment.ticker.isNullOrBlank()) {
+                Text(
+                    text = "Ticker: ${investment.ticker}",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
 
-            Text(text = investment.name ?: stringResource(R.string.empty_string),
-                lineHeight = 32.sp,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Medium,
-                textAlign = TextAlign.Center
+            LaunchedEffect(investment) {
+                val currentValueCalculated = withContext(Dispatchers.Default) {
+                    investment.value?.toDoubleOrNull() ?: 0.0
+                }
+                val principalValueCalculated = withContext(Dispatchers.Default) {
+                    investment.principal?.toDoubleOrNull() ?: 0.0
+                }
+                val profitLossCalculated = currentValueCalculated - principalValueCalculated
+                val profitLossPercentageCalculated = (profitLossCalculated / principalValueCalculated) * 100
+                currentValue = currentValueCalculated
+                principalValue = principalValueCalculated
+                profitLoss = profitLossCalculated
+                profitLossPercentage = profitLossPercentageCalculated
+            }
+
+            Text(
+                text = "Current Value: $${"%.2f".format(currentValue)}",    // Can't be Two Source of Truth
+                style = MaterialTheme.typography.bodyLarge
             )
-            Spacer(modifier = Modifier.height(24.dp))
-            Text(text = investment.ticker ?: stringResource(R.string.empty_string),
-                lineHeight = 24.sp,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Start
+            Text(
+                text = "Principal: $${"%.2f".format(principalValue)}",      // Can't be Two Source of Truth
+                style = MaterialTheme.typography.bodyLarge
             )
-            Spacer(modifier = Modifier.height(24.dp))
-            Text(text = investment.principal ?: stringResource(R.string._0),
-                lineHeight = 24.sp,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Start
+            Row {
+                Text(
+                    text = "Profit/Loss: ",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                    text = "${if (profitLoss >= 0) "+" else ""}$${"%.2f".format(profitLoss)}",
+                    color = if (profitLoss >= 0) Color.Green else Color.Red,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                    text = " ( ${"%.2f".format(profitLossPercentage)}% )",
+                    color = if (profitLoss >= 0) Color.Green else Color.Red,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+            Text(
+                text = "Details:",
+                style = MaterialTheme.typography.titleLarge
             )
-            Spacer(modifier = Modifier.height(24.dp))
-            Text(text = investment.value ?: stringResource(R.string._0),
-                lineHeight = 24.sp,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Start
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-            Text(text = investment.details ?: stringResource(R.string.empty_string),
-                lineHeight = 24.sp,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Start
+            Text(
+                text = investment.details ?: stringResource(id = R.string.empty_string),
+                style = MaterialTheme.typography.bodyLarge
             )
         }
     }

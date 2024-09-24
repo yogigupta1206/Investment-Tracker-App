@@ -1,7 +1,5 @@
 # Investment Portfolio Tracking App
 
-## Introduction
-
 This document describes the investment portfolio tracking app developed for the interview process. The app retrieves investment data from provided JSON files and displays them in a user-friendly interface.
 
 ### Demo
